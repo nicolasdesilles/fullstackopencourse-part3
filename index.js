@@ -32,6 +32,13 @@ app.get('/', (request, response) => {
     response.send('<h1>Hello from the phonebook backend server!</h1>')
 })
 
+app.get('/info', (request, response) => {
+    const currentTime = Date()
+    const numberOfEntries = persons.length
+    response.send(`<p>Phonebook has info for ${numberOfEntries} people</p> <p>Request received at time: ${currentTime}</p>`)
+
+})
+
 const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
