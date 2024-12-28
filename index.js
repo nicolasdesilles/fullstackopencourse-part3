@@ -25,21 +25,32 @@ let persons = [
 ]
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+  response.json(persons)
+})
+
+app.get('/api/persons/:id', (request, response) => {
+  const id = request.params.id
+  const person = persons.find(item => item.id === id)
+
+  if (person) {
+    response.json(person)
+  }
+  else {
+    response.status(404).end()
+  }
 })
 
 app.get('/', (request, response) => {
-    response.send('<h1>Hello from the phonebook backend server!</h1>')
+  response.send('<h1>Hello from the phonebook backend server!</h1>')
 })
 
 app.get('/info', (request, response) => {
-    const currentTime = Date()
-    const numberOfEntries = persons.length
-    response.send(`<p>Phonebook has info for ${numberOfEntries} people</p> <p>Request received at time: ${currentTime}</p>`)
-
+  const currentTime = Date()
+  const numberOfEntries = persons.length
+  response.send(`<p>Phonebook has info for ${numberOfEntries} people</p> <p>Request received at time: ${currentTime}</p>`)
 })
 
 const PORT = 3001
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 })
