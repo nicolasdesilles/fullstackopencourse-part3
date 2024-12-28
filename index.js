@@ -22,32 +22,6 @@ app.use(cors())
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms - :contents'))
 
-
-
-
-let persons = [
-    { 
-      "id": "1",
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": "2",
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": "3",
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": "4",
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
-
 app.get('/api/persons', (request, response) => {
   Person
     .find({})
@@ -58,22 +32,21 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-  const person = persons.find(item => item.id === id)
-
-  if (person) {
-    response.json(person)
-  }
-  else {
-    response.status(404).end()
-  }
+  Person
+    .findById(request.params.id)
+    .then(person => {
+      response.json(person)
+    })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
+
+  /*
   const id = request.params.id
   persons = persons.filter(person => person.id !== id)
 
   response.status(204).end()
+  */
 
 })
 
@@ -101,24 +74,15 @@ app.post('/api/persons', (request, response) => {
   const name = body.name
   const number = body.number
 
-  if (persons.find(person => person.name === name)) {
-    return response.status(400).json({
-      error: 'Name must be unique (name is already in phonebook)'
-    })
-  }
+  const newPerson = new Person({
+    name: name,
+    number: number
+  })
 
-  const id = Math.floor(Math.random() * 1000000)
+  newPerson.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 
-  const newPerson = {
-    "id": String(id),
-    "name": name,
-    "number": number
-  }
-
-  persons = persons.concat(newPerson)
-
-  //console.log(newPerson)
-  response.json(newPerson)
 })
 
 app.get('/', (request, response) => {
@@ -127,8 +91,12 @@ app.get('/', (request, response) => {
 
 app.get('/info', (request, response) => {
   const currentTime = Date()
-  const numberOfEntries = persons.length
-  response.send(`<p>Phonebook has info for ${numberOfEntries} people</p> <p>Request received at time: ${currentTime}</p>`)
+  Person
+    .find({})
+    .then(result => {
+      const numberOfEntries = result.length
+      response.send(`<p>Phonebook has info for ${numberOfEntries} people</p> <p>Request received at time: ${currentTime}</p>`)
+    })
 })
 
 const PORT = process.env.PORT
