@@ -3,8 +3,12 @@
   "version": "0.0.1",
   "main": "index.js",
   "scripts": {
+    "build:ui": "rm -r dist && cd ../fullstackopencourse/part2/phonebook && npm run build && cp -r dist ../../../fullstackopencourse-part3/",
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "deploy": "fly deploy",
+    "deploy:full": "npm run build:ui && npm run deploy",
+    "logs:prod": "fly logs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "\"Nicolas Désilles\"",
@@ -13,6 +17,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "mongoose": "^8.9.2",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
