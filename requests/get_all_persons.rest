@@ -1,1 +1,1 @@
-GET http://localhost:3001/api/persons
+GET https://fullstackopencourse-part3-nd.fly.dev/api/persons

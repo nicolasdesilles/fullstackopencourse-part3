@@ -1,7 +1,7 @@
-GET http://localhost:3001/api/persons
+GET https://fullstackopencourse-part3-nd.fly.dev/api/persons
 
 ###
-POST http://localhost:3001/api/persons
+POST https://fullstackopencourse-part3-nd.fly.dev/api/persons
 Content-Type: application/json
 
 {
