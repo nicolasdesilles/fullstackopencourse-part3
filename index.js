@@ -47,7 +47,6 @@ app.delete('/api/persons/:id', (request, response) => {
 
   response.status(204).end()
   */
-
 })
 
 app.post('/api/persons', (request, response) => {
