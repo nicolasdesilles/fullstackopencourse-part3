@@ -55,6 +55,53 @@ app.delete('/api/persons/:id', (request, response, next) => {
   
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  if (!body.name && !body.number) {
+    return response.status(400).json({
+      error: 'Name and Number missing'
+    })
+  }
+
+  if (!body.name) {
+    return response.status(400).json({
+      error: 'Name missing'
+    })
+  }
+
+  if (body.name === '') {
+    return response.status(400).json({
+      error: 'Name missing'
+    })
+  }
+
+  if (!body.number) {
+    return response.status(400).json({
+      error: 'Number missing'
+    })  
+  }
+
+  if (body.number === '') {
+    return response.status(400).json({
+      error: 'Number empty'
+    })  
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+
+  Person 
+    .findByIdAndUpdate(request.params.id, person, {new: true})
+      .then(updatedPerson => {
+        response.json(updatedPerson)
+      })
+      .catch(error => next(error))
+  
+})
+
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
@@ -70,11 +117,24 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
+  if (body.name === '') {
+    return response.status(400).json({
+      error: 'Name missing'
+    })
+  }
+
   if (!body.number) {
     return response.status(400).json({
       error: 'Number missing'
     })  
   }
+
+  if (body.number === '') {
+    return response.status(400).json({
+      error: 'Number empty'
+    })  
+  }
+
  
   const name = body.name
   const number = body.number
