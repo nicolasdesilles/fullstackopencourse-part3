@@ -58,6 +58,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
 
+  /*
   if (!body.name && !body.number) {
     return response.status(400).json({
       error: 'Name and Number missing'
@@ -87,6 +88,7 @@ app.put('/api/persons/:id', (request, response, next) => {
       error: 'Number empty'
     })  
   }
+  */
 
   const person = {
     name: body.name,
@@ -94,7 +96,11 @@ app.put('/api/persons/:id', (request, response, next) => {
   }
 
   Person 
-    .findByIdAndUpdate(request.params.id, person, {new: true})
+    .findByIdAndUpdate(
+      request.params.id, 
+      person, 
+      {new: true, runValidators: true, context: 'query'}
+    )
       .then(updatedPerson => {
         response.json(updatedPerson)
       })
@@ -102,9 +108,10 @@ app.put('/api/persons/:id', (request, response, next) => {
   
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
+  /*
   if (!body.name && !body.number) {
     return response.status(400).json({
       error: 'Name and Number missing'
@@ -134,6 +141,7 @@ app.post('/api/persons', (request, response) => {
       error: 'Number empty'
     })  
   }
+  */
 
  
   const name = body.name
@@ -144,9 +152,11 @@ app.post('/api/persons', (request, response) => {
     number: number
   })
 
-  newPerson.save().then(savedPerson => {
+  newPerson.save()
+  .then(savedPerson => {
     response.json(savedPerson)
   })
+  .catch(error => next(error))
 
 })
 
@@ -167,10 +177,12 @@ app.get('/info', (request, response) => {
 
 const errorHandler = (error, request, response, next) => {
 
-  console.error(error.message)
+  console.error(`ERROR: ${error.errors.name.properties.message}`)
 
   if (error.name === 'CastError') {
     response.status(400).send({error: 'Malformatted ID'}).end()
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({error: error.message})
   }
 
   next(error)
