@@ -58,38 +58,6 @@ app.delete('/api/persons/:id', (request, response, next) => {
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
 
-  /*
-  if (!body.name && !body.number) {
-    return response.status(400).json({
-      error: 'Name and Number missing'
-    })
-  }
-
-  if (!body.name) {
-    return response.status(400).json({
-      error: 'Name missing'
-    })
-  }
-
-  if (body.name === '') {
-    return response.status(400).json({
-      error: 'Name missing'
-    })
-  }
-
-  if (!body.number) {
-    return response.status(400).json({
-      error: 'Number missing'
-    })  
-  }
-
-  if (body.number === '') {
-    return response.status(400).json({
-      error: 'Number empty'
-    })  
-  }
-  */
-
   const person = {
     name: body.name,
     number: body.number,
@@ -110,39 +78,6 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
-
-  /*
-  if (!body.name && !body.number) {
-    return response.status(400).json({
-      error: 'Name and Number missing'
-    })
-  }
-
-  if (!body.name) {
-    return response.status(400).json({
-      error: 'Name missing'
-    })
-  }
-
-  if (body.name === '') {
-    return response.status(400).json({
-      error: 'Name missing'
-    })
-  }
-
-  if (!body.number) {
-    return response.status(400).json({
-      error: 'Number missing'
-    })  
-  }
-
-  if (body.number === '') {
-    return response.status(400).json({
-      error: 'Number empty'
-    })  
-  }
-  */
-
  
   const name = body.name
   const number = body.number
@@ -177,7 +112,7 @@ app.get('/info', (request, response) => {
 
 const errorHandler = (error, request, response, next) => {
 
-  console.error(`ERROR: ${error.errors.name.properties.message}`)
+  console.error(`ERROR: ${error.message}`)
 
   if (error.name === 'CastError') {
     response.status(400).send({error: 'Malformatted ID'}).end()
